@@ -10,7 +10,7 @@ const Nav = () => {
         <NavBar>
             <div className="nav-top">
                 <div className="logo">
-                    <img src={logo} alt="Company Logo" />
+                    <Link to="/"><img src={logo} alt="Company Logo" /></Link>
                 </div>
 
                 <div className="hamBtn" onClick={() => setShow(!show)}>

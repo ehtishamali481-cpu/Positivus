@@ -1,8 +1,48 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from "styled-components";
 import { teamImges } from './images';
+import axios from "axios"
+import { toast } from "react-toastify";
 
 const Contact = () => {
+    const [userMessage, setUserMessage] = useState({
+        question: "",
+        name: "",
+        email: "",
+        message: ""
+    });
+    const changeHandle = (e) => {
+        const { name, value } = e.target
+        setUserMessage({
+            ...userMessage,
+            [name]: value
+        })
+    };
+
+    const formReset = () => {
+        setUserMessage({
+            question: "",
+            name: "",
+            email: "",
+            message: ""
+        })
+    };
+    const formSubmit = async (e) => {
+        e.preventDefault();
+        const { question, name, email, message } = userMessage;
+        if (!question || !name || !email || !message) {
+            toast.error("Please fill all input");
+            return;
+        }
+        try {
+            const res = await axios.post("http://localhost:5000/api/usermessage/message", userMessage);
+            console.log(res.data)
+        } catch (error) {
+            console.log("post error", error)
+        }
+        toast.success("Form Submit Successfully")
+        formReset();
+    };
     return (
         <>
             <div className="flex items-center gap-8 my-10 flex-wrap justify-start max-[500px]:gap-4 max-[576px]:justify-center">
@@ -11,25 +51,50 @@ const Contact = () => {
                     Connect with Us: Let's Discuss Your Digital Marketing Needs
                 </p>
             </div>
-            <div className="flex  items-center justify-between py-14 px-10 bg-[#F3F3F3] rounded-[45px] gap-8 max-[1024px]:px-6 max-[768px]:justify-center relative">
+            <form onSubmit={formSubmit} className="flex  items-center justify-between py-14 px-10 bg-[#F3F3F3] rounded-[45px] gap-8 max-[1024px]:px-6 max-[768px]:justify-center relative">
                 <div className="flex flex-col gap-6 w-full max-w-[500px] ">
                     <Input>
                         <label className='items-center flex gap-2'>
-                            <input type="radio" name="check" /> <span>Say Hi</span>
+                            <input
+                                type="radio"
+                                name="question"
+                                value="say hi"
+                                onChange={changeHandle} /> <span>Say Hi</span>
                         </label>
                         <label className='items-center flex gap-2'>
-                            <input type="radio" name="check" /> <span>Get A Quote</span>
+                            <input
+                                type="radio"
+                                name="question"
+                                value="Quote"
+                                onChange={changeHandle} /> <span>Get A Quote</span>
                         </label>
                     </Input>
 
                     <label>Name
-                        <input className='w-full input-border rounded-[14px] p-3 mt-2 bg-white' type="text" placeholder='Name' />
+                        <input className='w-full input-border rounded-[14px] p-3 mt-2 bg-white'
+                            type="text"
+                            placeholder='Name'
+                            name='name'
+                            value={userMessage.name}
+                            onChange={changeHandle}
+                        />
                     </label>
                     <label>Email*
-                        <input className='w-full input-border rounded-[14px] p-3 mt-2 bg-white' type="email" placeholder='Email' />
+                        <input className='w-full input-border rounded-[14px] p-3 mt-2 bg-white'
+                            type="email"
+                            placeholder='Email'
+                            name='email'
+                            value={userMessage.email}
+                            onChange={changeHandle}
+                        />
                     </label>
                     <label>Message
-                        <textarea className='w-full input-border rounded-[14px] p-3 mt-2 bg-white h-40 resize-none' placeholder='Message'></textarea>
+                        <textarea className='w-full input-border rounded-[14px] p-3 mt-2 bg-white h-40 resize-none'
+                            placeholder='Message'
+                            name='message'
+                            value={userMessage.message}
+                            onChange={changeHandle}
+                        ></textarea>
                     </label>
                     <button className="bg-[#191A23] text-white py-3 rounded-[14px] hover:opacity-90 transition-all">
                         Send a Message
@@ -44,7 +109,7 @@ const Contact = () => {
                     />
                 </div>
 
-            </div>
+            </form>
         </>
     )
 }

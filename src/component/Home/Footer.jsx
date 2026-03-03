@@ -1,8 +1,51 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router'
 import { icon } from './images'
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const Footer = () => {
+    const [subscribe, setSubscribe] = useState({
+        email: ""
+    });
+
+
+
+    const changeHandle = (e) => {
+        const { name, value } = e.target
+        setSubscribe({
+            ...subscribe,
+            [name]: value
+        })
+    };
+
+    const formSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const { email } = subscribe;
+            if (!email) {
+                toast.error("Please fill the Email");
+                return;
+            };
+            const res = await axios.post("http://localhost:5000/api/email/subscribe", subscribe);
+            if (res.data.status === 400 || res.data.status === 500) {
+                toast.error("Email already registered");
+                setSubscribe({
+                    email: ""
+                })
+            } else {
+                toast.success("Subscribe Successfully");
+                setSubscribe({
+                    email: ""
+                });
+            }
+        } catch (error) {
+
+        }
+
+
+    }
     return (
         <>
             <div className="px-8 max-[780px]:hidden footer-container">
@@ -20,9 +63,9 @@ const Footer = () => {
 
                         </ul>
                         <div className="flex items-center gap-4 max-[1024px]:gap-2 ">
-                            <a href=""><img src={icon.linkdin} alt="" /></a>
-                            <a href=""> <img src={icon.facebook} alt="" /></a>
-                            <a href=""><img src={icon.twitter} alt="" /></a>
+                            <a href="https://www.linkedin.com" target='blank'><img src={icon.linkdin} alt="" /></a>
+                            <a href="https://www.facebook.com" target='blank'> <img src={icon.facebook} alt="" /></a>
+                            <a href="https://twitter.com" target='blank'><img src={icon.twitter} alt="" /></a>
                         </div>
                     </div>
                     <div className="flex items-center justify-between gap-3">
@@ -32,10 +75,17 @@ const Footer = () => {
                             <p className='max-w-[332px]'>Address: 1234 Main St
                                 Moonstone City, Stardust State 12345</p>
                         </div>
-                        <div className="px-10 py-15 bg-[#292A32] flex max-[900px]:flex-wrap justify-center items-center gap-3 rounded-[14px] ">
-                            <input className='bg-transparent text-white border-2 py-5 px-9 rounded-2xl placeholder-white' type="email" id='email' placeholder='Email' />
+                        <form onSubmit={formSubmit} className="px-10 py-15 bg-[#292A32] flex max-[900px]:flex-wrap justify-center items-center gap-3 rounded-[14px] ">
+                            <input className='bg-transparent text-white border-2 py-5 px-9 rounded-2xl placeholder-white'
+                                type="email"
+                                id='email'
+                                placeholder='Email'
+                                name='email'
+                                value={subscribe.email}
+                                onChange={changeHandle}
+                            />
                             <button className="text-black bg-[#B9FF66] ]">Subscribe to News</button>
-                        </div>
+                        </form>
                     </div>
                     <div className="border-t-2 mt-8 py-6 flex gap-5 items-center justify-start">
                         <p>© 2023 Positivus. All Rights Reserved.</p><a href=""> <span className='text-[#F3F3F3] border-b-2'>Privacy Policy</span></a>
@@ -73,15 +123,23 @@ const Footer = () => {
                             <p className='max-w-[332px]'>Address: 1234 Main St <br />
                                 Moonstone City, Stardust State 12345</p>
                         </div>
-                        <div className="p-3 bg-[#292A32] flex flex-col items-center gap-3 rounded-[14px] my-6">
-                            <input className='bg-transparent text-white border-2 py-5 px-12 rounded-2xl placeholder-white max-[768px]:w-[290px] max-[768px]:px-3' type="email" id='email' placeholder='Email' />
+                        <form onSubmit={formSubmit} className="p-3 bg-[#292A32] flex flex-col items-center gap-3 rounded-[14px] my-6">
+                            <input
+                                className='bg-transparent text-white border-2 py-5 px-12 rounded-2xl placeholder-white max-[768px]:w-[290px] max-[768px]:px-3'
+                                type="email"
+                                id='email'
+                                placeholder='Email'
+                                name='email'
+                                value={subscribe.email}
+                                onChange={changeHandle}
+                            />
                             <button className="text-black bg-[#B9FF66] w-[290px] h-15 max-[768]:w-[298px]"><b>Subscribe to News</b></button>
-                        </div>
+                        </form>
                     </div>
                     <div className="flex items-center justify-center gap-4">
-                        <a href=""><img src={icon.linkdin} alt="Linkdin Icon" /></a>
-                        <a href=""> <img src={icon.facebook} alt="FaceBook Icon" /></a>
-                        <a href=""><img src={icon.twitter} alt="Twitter Icon" /></a>
+                        <a href="https://www.linkedin.com" target='blank'><img src={icon.linkdin} alt="Linkdin Icon" /></a>
+                        <a href="https://www.facebook.com" target='blank'> <img src={icon.facebook} alt="FaceBook Icon" /></a>
+                        <a href="https://twitter.com" target='blank'><img src={icon.twitter} alt="Twitter Icon" /></a>
                     </div>
                     <div className="border-t-2 mt-8 py-6 flex flex-wrap gap-5 items-center justify-center">
                         <p className='whitespace-nowrap'>© 2023 Positivus. All Rights Reserved.</p><a href=""> <p className='text-[#F3F3F3]'>Privacy Policy</p></a>

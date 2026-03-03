@@ -7,7 +7,12 @@ import Pricing from './component/Pricing/Pricing'
 import Blog from './component/Blog/Blog'
 import { BrowserRouter, Routes, Route } from "react-router";
 
+
+
+
+
 const App = () => {
+
     return (
         <BrowserRouter>
             <Routes>
